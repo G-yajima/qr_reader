@@ -102,7 +102,7 @@ def decode_qr_droidcam(droidcam_url, confirmation_threshold=5):
             
             # 情報表示エリア
             overlay = display_frame.copy()
-            info_height = 100 + len(confirmed_qr_codes) * 25
+            info_height = 125
             cv2.rectangle(overlay, (5, 5), (600, info_height), (50, 50, 50), -1)
             cv2.addWeighted(overlay, 0.7, display_frame, 0.3, 0, display_frame)
             
@@ -118,18 +118,18 @@ def decode_qr_droidcam(droidcam_url, confirmation_threshold=5):
                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
             
             # 確定したQRコードのリストを表示
-            if confirmed_qr_codes:
-                y_offset += 30
-                cv2.putText(display_frame, "Confirmed QR codes:", 
-                           (10, y_offset),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            # if confirmed_qr_codes:
+            #     y_offset += 30
+            #     cv2.putText(display_frame, "Confirmed QR codes:", 
+            #                (10, y_offset),
+            #                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
                 
-                for idx, qr_data in enumerate(sorted(confirmed_qr_codes), 1):
-                    y_offset += 20
-                    display_text = f"{idx}. {qr_data[:40]}..." if len(qr_data) > 40 else f"{idx}. {qr_data}"
-                    cv2.putText(display_frame, display_text, 
-                               (20, y_offset),
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+            #     for idx, qr_data in enumerate(sorted(confirmed_qr_codes), 1):
+            #         y_offset += 20
+            #         display_text = f"{idx}. {qr_data[:40]}..." if len(qr_data) > 40 else f"{idx}. {qr_data}"
+            #         cv2.putText(display_frame, display_text, 
+            #                    (20, y_offset),
+            #                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
             
             # 操作ガイド
             y_offset += 30

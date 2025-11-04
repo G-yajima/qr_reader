@@ -12,3 +12,20 @@ import pytest
 @pytest.fixture
 def droidcam_url(request):
     return request.config.getoption("--droidcam_url")
+
+
+
+def pytest_runtest_logstart(nodeid, location):
+    """テスト名が表示された直後に呼ばれる"""
+    
+    # テスト名に応じてメッセージを表示
+    test_messages = {
+        "test_decode_qr_droidcam_single_sample": ">>> 4_315のSDカードを読み取って！",
+        "test_decode_qr_droidcam_multiple_samples_SDcard": ">>> 複数のSDカードを読み取って！",
+    }
+    
+    # テスト名を取得
+    test_name = nodeid.split("::")[-1]
+    
+    if test_name in test_messages:
+        print(f"\n{test_messages[test_name]}", flush=True)
