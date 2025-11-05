@@ -1,0 +1,4 @@
+- [] 接続が不安定そうなので、落ちても記録が残るように改良
+    - [] recoder classを定義
+        - [] これまで記録してきたconfirmed_qr_codes（set class）を格納
+    - [] 特定のキーを押すまでwhileでクラスを維持

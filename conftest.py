@@ -22,6 +22,8 @@ def pytest_runtest_logstart(nodeid, location):
     test_messages = {
         "test_decode_qr_droidcam_single_sample": ">>> 4_315のSDカードを読み取って！",
         "test_decode_qr_droidcam_multiple_samples_SDcard": ">>> 複数のSDカードを読み取って！",
+        "test_QrRecorder_add_decode": ">>> 4_315のSDカードを読み取って！",
+        "test_QrRecorder_add_decode_ignore_same_SD": ">>> 1回目: 4_315のSDカード 2回目: 4_315と2のやつら",
     }
     
     # テスト名を取得
