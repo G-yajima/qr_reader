@@ -152,16 +152,14 @@ class QrDecorder():
         except ConnectionError as e:
             cap.release()
             cv2.destroyAllWindows()
-            # エンターが押され、stateが"stop"になったら更新
-            if self.state == "stop":
+            if self.state == "run":
                 self.current_codes = set()
                 self.current_codes.update(list(confirmed_qr_codes))
-        
+
         except Exception as e:
             cap.release()
             cv2.destroyAllWindows()
-            # エンターが押され、stateが"stop"になったら更新
-            if self.state == "stop":
+            if self.state == "run":
                 self.current_codes = set()
                 self.current_codes.update(list(confirmed_qr_codes))
 
