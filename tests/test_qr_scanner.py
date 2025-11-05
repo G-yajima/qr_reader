@@ -5,7 +5,7 @@ from unittest.mock import patch
 from src.qr_scanner import qr_scan
 
 
-def test_QrRecorder_add_decode_ignore_same_SD(droidcam_url):
+def test_QrRecorder_add_decode_multiple_codes(droidcam_url):
     expected_qr_codes = ["2_32", "2_34", "2_36",
                          "2_31", "2_33", "2_35", "4_315"]
     r = qr_scan(droidcam_url)
