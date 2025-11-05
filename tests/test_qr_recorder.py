@@ -1,29 +1,43 @@
 import cv2
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock, PropertyMock
 
-
-
-from src.qr_decoder import decode_qr_image, decode_qr_droidcam
+from src.qr_decoder import QrDecorder
 from src.qr_recorder import QrRecorder
-from src.qr_scanner import qr_scan
 
 def test_QrRecorder_initilize():
     r = QrRecorder()
     
-    assert type(r.recods) is list
+    assert type(r.records) is list
 
-def test_QrRecorder_add_decode_with_mock():
+# tests/test_qr_recorder.py
+
+
+
+def test_QrRecorder_with_QrDecoder_attribute():
+    """QrDecoderの属性をモック化"""
     r = QrRecorder()
     
-    with patch('src.qr_decoder.decode_qr_droidcam') as mock_decode:
-        mock_decode.return_value = ["4_315"]
+    with patch('src.qr_decoder.QrDecorder') as MockQrDecoder:
+        # モックインスタンスを作成
+        mock_decoder = MagicMock()
         
-        # ✅ モックを直接呼ぶ（インポート不要）
-        results = mock_decode("http://dummy:4747/video")
+        # current_codes属性を設定
+        mock_decoder.current_codes = {"4_315"}
+        
+        # QrDecoderのコンストラクタがモックインスタンスを返す
+        MockQrDecoder.return_value = mock_decoder
+        
+        # 実際の使用方法
+        from src.qr_decoder import QrDecorder
+        decoder = QrDecorder(droidcam_url="http://dummy:4747/video")
+        decoder.decode_droidcam(confirmation_threshold=5)
+        results = decoder.current_codes
+        
         r.add_decodes(results)
     
-    assert "4_315" in r.recods
+    assert "4_315" in r.records
+    assert len(r.records) == 1
 
 
 

@@ -2,7 +2,8 @@ import cv2
 import pytest
 
 
-from src.qr_decoder import decode_qr_image, decode_qr_droidcam
+from src.qr_decoder import QrDecorder, decode_qr_image
+from src.qr_recorder import QrRecorder
 
 def test_decode_qr_testimage_single_sample():
     """サンプルQRコードが正しく読めるかのテスト"""
@@ -10,29 +11,29 @@ def test_decode_qr_testimage_single_sample():
     number = decode_qr_image(img)
     assert number == "4_315"
 
+def test_decode_qr_droidcam_single_sample(droidcam_url):
+    """droidcam経由で読み込めるかをテスト"""
+    expected_qr_code = "4_315"
 
+    r = QrRecorder()
+    d = QrDecorder(droidcam_url)
 
-
-
-# def test_decode_qr_droidcam_single_sample(droidcam_url):
-#     """droidcam経由で読み込めるかをテスト"""
-#     expected_qr_code = "4_315"
-
-#     results = decode_qr_droidcam(droidcam_url)
+    d.decode_droidcam()
+    results = list(d.current_codes)
     
-#     # リストが返ってくることを確認
-#     assert isinstance(results, list), "結果はリストであるべき"
+    # リストが返ってくることを確認
+    assert isinstance(results, list), "結果はリストであるべき"
     
-#     # 1つだけ検出されることを確認
-#     assert len(results) == 1, (
-#         f"1つのQRコードが期待されるが、{len(results)}個検出された。"
-#         f"検出結果: {results}"
-#     )
+    # 1つだけ検出されることを確認
+    assert len(results) == 1, (
+        f"1つのQRコードが期待されるが、{len(results)}個検出された。"
+        f"検出結果: {results}"
+    )
     
-#     # 期待値と一致することを確認
-#     assert results[0] == expected_qr_code, (
-#         f"期待値: '4_315', 実際: '{results[0]}'"
-#     )
+    # 期待値と一致することを確認
+    assert results[0] == expected_qr_code, (
+        f"期待値: '4_315', 実際: '{results[0]}'"
+    )
 
 
 # def test_decode_qr_droidcam_multiple_samples_SDcard(droidcam_url):

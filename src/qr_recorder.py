@@ -1,11 +1,11 @@
 
 class QrRecorder():
     def __init__(self):
-        self._recods = set()
+        self._records = set()
     
     @property
-    def recods(self):
-        return list(self._recods)
+    def records(self):
+        return list(self._records)
     
     def add_decodes(self, qr_list):
-        self._recods.update(qr_list)
+        self._records.update(qr_list)
