@@ -117,20 +117,6 @@ def decode_qr_droidcam(droidcam_url, confirmation_threshold=5):
                        (10, y_offset),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
             
-            # 確定したQRコードのリストを表示
-            # if confirmed_qr_codes:
-            #     y_offset += 30
-            #     cv2.putText(display_frame, "Confirmed QR codes:", 
-            #                (10, y_offset),
-            #                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-                
-            #     for idx, qr_data in enumerate(sorted(confirmed_qr_codes), 1):
-            #         y_offset += 20
-            #         display_text = f"{idx}. {qr_data[:40]}..." if len(qr_data) > 40 else f"{idx}. {qr_data}"
-            #         cv2.putText(display_frame, display_text, 
-            #                    (20, y_offset),
-            #                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
-            
             # 操作ガイド
             y_offset += 30
             cv2.putText(display_frame, "Press [ENTER] to finish", 
