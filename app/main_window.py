@@ -6,12 +6,30 @@ from PyQt6.QtCore import Qt
 from src.qr_scanner import qr_scan
 from src.rewrite_excel import rewrite_excel
 
+from PyQt6.QtGui import QPixmap
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("QR Excel Updater 💫")
         self.setGeometry(200, 200, 680, 540)
+
+        # === 背景画像ラベル ===
+        bg_label = QLabel(self)
+        bg_pixmap = QPixmap("assets/background.png")
+        bg_label.setPixmap(bg_pixmap)
+        bg_label.setScaledContents(True)  # ウィンドウサイズに合わせて拡大縮小
+        bg_label.setGeometry(470, 80, 250, 407)
+
+        # === 半透明オーバーレイ ===
+        overlay = QLabel(self)
+        overlay.setStyleSheet("background-color: rgba(255, 255, 255, 128);")  # 白50%透明
+        overlay.setGeometry(0, 0, self.width(), self.height())
+
+        # 背景を一番後ろに固定
+        bg_label.lower()
+        overlay.lower()
 
         # === DroidCam URL入力欄 ===
         self.label_url = QLabel("DroidCamのURL:", self)
