@@ -1,6 +1,6 @@
 import cv2
 import pytest
-
+import time
 
 from src.qr_decoder import QrDecorder, decode_qr_image
 from src.qr_recorder import QrRecorder
@@ -11,6 +11,7 @@ def test_decode_qr_testimage_single_sample():
     number = decode_qr_image(img)
     assert number == "4_315"
 
+@pytest.mark.integration
 def test_decode_qr_droidcam_single_sample(droidcam_url):
     """droidcam経由で読み込めるかをテスト"""
     expected_qr_code = "4_315"
@@ -18,8 +19,20 @@ def test_decode_qr_droidcam_single_sample(droidcam_url):
     r = QrRecorder()
     d = QrDecorder(droidcam_url)
 
-    d.decode_droidcam()
-    results = list(d.current_codes)
+    while True:
+        try:
+            d.decode_droidcam()
+            results = list(d.current_codes)
+            if d.state == "stop":
+                break
+        except ConnectionError as e:
+            # print(f"⚠ 接続エラー: {e}")
+            # print("  再接続を試みます...")
+            time.sleep(2)
+        
+        except Exception as e:
+            # print(f"⚠ エラー: {e}")
+            time.sleep(1)
     
     # リストが返ってくることを確認
     assert isinstance(results, list), "結果はリストであるべき"

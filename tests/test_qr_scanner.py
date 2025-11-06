@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from src.qr_scanner import qr_scan
 
-
+@pytest.mark.integration
 def test_QrRecorder_add_decode_multiple_codes(droidcam_url):
     expected_qr_codes = ["2_32", "2_34", "2_36",
                          "2_31", "2_33", "2_35", "4_315"]

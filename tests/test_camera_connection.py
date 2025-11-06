@@ -2,6 +2,7 @@ import cv2
 import pytest
 import threading
 
+@pytest.mark.integration
 def test_camera_connection(droidcam_url):
     cap = cv2.VideoCapture()
 
