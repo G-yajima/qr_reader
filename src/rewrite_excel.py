@@ -3,7 +3,7 @@ import pandas as pd
 import warnings
 import os
 
-def rewrite_excel(path_excel, save_dir, qr_labels, to_Location, to_User):
+def rewrite_excel(path_excel, save_log_dir, qr_labels, to_Location, to_User):
     # Excelの読み込み
     current_excel = pd.read_excel(path_excel)
 
@@ -12,7 +12,7 @@ def rewrite_excel(path_excel, save_dir, qr_labels, to_Location, to_User):
     if len(no_listed_labels) != 0:
         warnings.warn(f"以下のラベルはExcelにありません: {no_listed_labels}")
         no_listed_labels_df = pd.DataFrame({"label": no_listed_labels})
-        save_path = os.path.join(save_dir, "No_listed_qrcodes.xlsx")
+        save_path = os.path.join(save_log_dir, "No_listed_qrcodes.xlsx")
         no_listed_labels_df.to_excel(save_path, index=False)
     
     # 該当SDの情報を書き換える
@@ -21,10 +21,9 @@ def rewrite_excel(path_excel, save_dir, qr_labels, to_Location, to_User):
     current_excel.loc[mask, "User"] = to_User
 
     # 保存: 本体
-    save_path = os.path.join(save_dir, "rewrite_file.xlsx")
-    current_excel.to_excel(save_path, index=False)
+    current_excel.to_excel(path_excel, index=False)
 
     # 保存: 検出ラベル
     scaned_df = pd.DataFrame({"label": qr_labels})
-    save_path = os.path.join(save_dir, "scanned_qrcodes.xlsx")
+    save_path = os.path.join(save_log_dir, "scanned_qrcodes.xlsx")
     scaned_df.to_excel(save_path, index=False)
