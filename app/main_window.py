@@ -1,0 +1,67 @@
+from PyQt6.QtWidgets import (
+    QMainWindow, QPushButton, QTextEdit, QFileDialog, QMessageBox
+)
+from PyQt6.QtCore import Qt
+
+# あーしの関数たちをimport（実際のファイル名に合わせてね！）
+from src.qr_scanner import qr_scan
+from src.rewrite_excel import rewrite_excel
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("QR Excel Updater 💫")
+        self.setGeometry(200, 200, 600, 400)
+
+        # === ボタンとログビュー ===
+        self.btn_scan = QPushButton("QR読み取り📷", self)
+        self.btn_scan.setGeometry(50, 50, 200, 40)
+        self.btn_scan.clicked.connect(self.scan_qr)
+
+        self.btn_rewrite = QPushButton("Excel更新✏️", self)
+        self.btn_rewrite.setGeometry(50, 110, 200, 40)
+        self.btn_rewrite.clicked.connect(self.update_excel)
+
+        self.text_log = QTextEdit(self)
+        self.text_log.setGeometry(50, 170, 500, 180)
+        self.text_log.setReadOnly(True)
+        self.text_log.setPlaceholderText("ここにログが出るよ✨")
+
+        # === 内部状態 ===
+        self.qr_labels = []
+
+    def log(self, message):
+        """ログ出力のショートカット"""
+        self.text_log.append(message)
+
+    def scan_qr(self):
+        """QRコード読み取り"""
+        try:
+            droidcam_url = "http://192.168.0.180:4747/video"  # 必要なら後でUI入力可に
+            result = qr_scan(droidcam_url)
+            self.qr_labels = result.records
+            self.log(f"✅ 読み取ったQR: {self.qr_labels}")
+        except Exception as e:
+            QMessageBox.critical(self, "エラー💥", f"QR読み取り失敗: {e}")
+
+    def update_excel(self):
+        """Excelファイルの書き換え"""
+        if not self.qr_labels:
+            QMessageBox.warning(self, "注意⚠️", "QRを先に読み取ってね！")
+            return
+
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Excelファイルを選択", "", "Excel Files (*.xlsx)"
+        )
+        if not file_path:
+            return
+
+        try:
+            rewrite_excel(file_path, "logs", self.qr_labels, "房総", "松岡")
+            QMessageBox.information(self, "完了✨", "Excelの書き換えが完了しました！")
+            self.log(f"✏️ Excel更新完了: {file_path}")
+        except UserWarning as w:
+            QMessageBox.warning(self, "警告⚠️", str(w))
+        except Exception as e:
+            QMessageBox.critical(self, "エラー💥", f"書き換え失敗: {e}")
