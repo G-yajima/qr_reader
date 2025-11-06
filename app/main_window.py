@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
         try:
             result = qr_scan(url)
             self.qr_labels = result.records
-            self.log(f"✅ 読み取ったQR: {self.qr_labels}")
+            self.log(f"✅ 読み取ったQRの数: {len(self.qr_labels)}")
         except Exception as e:
             QMessageBox.critical(self, "エラー💥", f"QR読み取り失敗: {e}")
 
