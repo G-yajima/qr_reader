@@ -20,8 +20,9 @@ def pytest_runtest_logstart(nodeid, location):
     
     # テスト名に応じてメッセージを表示
     test_messages = {
-        "test_decode_qr_droidcam_single_sample": ">>> 4_315のSDカードを読み取って！",
-        "test_QrRecorder_add_decode_multiple_codes": ">>> 1回目: 4_315のSDカード 2回目: 4_315と2のやつら",
+        "test_decode_qr_droidcam_single_sample": ">>> 4_315のSDカードを読み取って",
+        "test_QrRecorder_add_decode_multiple_codes": ">>> 1回目: 4_315のSDカード 2回目: 4_315と2のやつらを読み取って",
+        "test_rewrite_file_test1_with_NoListed_label_with_doroidcam": ">> 2_25 2_26 4_288を読み取って",
     }
     
     # テスト名を取得
