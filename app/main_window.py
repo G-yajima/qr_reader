@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("QR Excel Updater 💫")
-        self.setGeometry(200, 200, 650, 480)
+        self.setGeometry(200, 200, 680, 540)
 
         # === DroidCam URL入力欄 ===
         self.label_url = QLabel("DroidCamのURL:", self)
@@ -33,18 +33,34 @@ class MainWindow(QMainWindow):
         self.btn_select_dir.setGeometry(460, 80, 80, 30)
         self.btn_select_dir.clicked.connect(self.select_output_dir)
 
+        # === 調査地入力欄 ===
+        self.label_location = QLabel("調査地:", self)
+        self.label_location.setGeometry(50, 130, 150, 30)
+
+        self.input_location = QLineEdit(self)
+        self.input_location.setGeometry(180, 130, 200, 30)
+        self.input_location.setPlaceholderText("例: 房総")
+
+        # === 使用者入力欄 ===
+        self.label_user = QLabel("使用者:", self)
+        self.label_user.setGeometry(50, 180, 150, 30)
+
+        self.input_user = QLineEdit(self)
+        self.input_user.setGeometry(180, 180, 200, 30)
+        self.input_user.setPlaceholderText("例: 松岡")
+
         # === ボタン ===
         self.btn_scan = QPushButton("QR読み取り📷", self)
-        self.btn_scan.setGeometry(50, 130, 200, 40)
+        self.btn_scan.setGeometry(50, 230, 200, 40)
         self.btn_scan.clicked.connect(self.scan_qr)
 
         self.btn_rewrite = QPushButton("Excel更新✏️", self)
-        self.btn_rewrite.setGeometry(270, 130, 200, 40)
+        self.btn_rewrite.setGeometry(270, 230, 200, 40)
         self.btn_rewrite.clicked.connect(self.update_excel)
 
         # === ログ欄 ===
         self.text_log = QTextEdit(self)
-        self.text_log.setGeometry(50, 190, 550, 230)
+        self.text_log.setGeometry(50, 290, 580, 200)
         self.text_log.setReadOnly(True)
         self.text_log.setPlaceholderText("ここにログが出るよ✨")
 
@@ -65,10 +81,11 @@ class MainWindow(QMainWindow):
     def scan_qr(self):
         """QRコード読み取り"""
         ip_and_port = self.input_url.text().strip()
-        url = "http://" + ip_and_port + "/video"
         if not ip_and_port:
             QMessageBox.warning(self, "注意⚠️", "DroidCamのURLを入力してね！")
             return
+
+        url = f"http://{ip_and_port}/video"
 
         try:
             result = qr_scan(url)
@@ -88,6 +105,16 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "注意⚠️", "保存フォルダを指定してね！")
             return
 
+        to_Location = self.input_location.text().strip()
+        if not to_Location:
+            QMessageBox.warning(self, "注意⚠️", "調査地を入力してね！")
+            return
+
+        to_User = self.input_user.text().strip()
+        if not to_User:
+            QMessageBox.warning(self, "注意⚠️", "使用者を入力してね！")
+            return
+
         file_path, _ = QFileDialog.getOpenFileName(
             self, "Excelファイルを選択", "", "Excel Files (*.xlsx)"
         )
@@ -95,9 +122,9 @@ class MainWindow(QMainWindow):
             return
 
         try:
-            rewrite_excel(file_path, output_dir, self.qr_labels, "房総", "松岡")
+            rewrite_excel(file_path, output_dir, self.qr_labels, to_Location, to_User)
             QMessageBox.information(self, "完了✨", "Excelの書き換えが完了しました！")
-            self.log(f"✏️ Excel更新完了: {file_path}\n→ 保存フォルダ: {output_dir}")
+            self.log(f"✏️ Excel更新完了: {file_path}\n→ 保存先: {output_dir}\n→ 調査地: {to_Location}, 使用者: {to_User}")
         except UserWarning as w:
             QMessageBox.warning(self, "警告⚠️", str(w))
         except Exception as e:
