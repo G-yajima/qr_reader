@@ -1,0 +1,97 @@
+# excel関連
+import pandas as pd
+from src.rewrite_excel import rewrite_excel
+
+# Test関連
+import pytest
+from unittest.mock import patch, MagicMock
+
+# QR関連
+from src.qr_scanner import qr_scan
+
+
+def test_Location_and_User_rewrite_file_test1():
+    """
+    最初の二行 (2_31と2_32) 
+    1. Locationを「研究室」から「房総」へ
+    2. Userを「矢島」から「松岡」へ
+    """
+    # 変更したい項目
+    to_Location   = "房総"
+    to_User       = "松岡"
+    path_excel    = "tests/data/TestExcel_org.xlsx"
+    save_dir      = "tests/output"
+
+    # 期待するエクセルファイル
+    expected_excel = pd.read_excel("tests/data/TestExcel_test1_expected.xlsx")
+
+    # qr_scanの出力
+    with patch('src.qr_scanner.qr_scan') as mock_qr_scan:
+        '''
+        この中では qr_scan が偽物になっている
+        from src.qr_scanner import qr_scan
+        print(qr_scan is mock_qr_scan)  # Trueになるということ
+        '''
+        mock_recorder = MagicMock()
+        mock_recorder.records = ["2_31", "2_32"]
+        mock_qr_scan.return_value = mock_recorder
+        
+        from src.qr_scanner import qr_scan # この qr_scan は偽物
+        r = qr_scan("http://dummy:4747/video")
+        qr_labels = r.records
+    '''ブロックを出ると元に戻る'''
+
+    # 書き換えと保存
+    rewrite_excel(path_excel, save_dir, qr_labels, to_Location, to_User)
+
+    rewrite_file = pd.read_excel("tests/output/rewrite_file.xlsx")
+
+    # 評価
+    assert (rewrite_file["Location"] == expected_excel["Location"]).all()
+    assert (rewrite_file["User"] == expected_excel["User"]).all()
+
+
+def test_rewrite_file_test1_with_NoListed_label():
+    """
+    最初の二行 (2_31と2_32) 
+    1. Locationを「研究室」から「房総」へ
+    2. Userを「矢島」から「松岡」へ
+    3. エクセルには存在しない「1_996と8_712」が存在
+    """
+    # 変更したい項目
+    to_Location   = "房総"
+    to_User       = "松岡"
+    path_excel    = "tests/data/TestExcel_org.xlsx"
+    save_dir      = "tests/output"
+
+    # 期待するエクセルファイル
+    expected_excel = pd.read_excel("tests/data/TestExcel_test1_expected.xlsx")
+
+    # qr_scanの出力
+    with patch('src.qr_scanner.qr_scan') as mock_qr_scan:
+        '''
+        この中では qr_scan が偽物になっている
+        from src.qr_scanner import qr_scan
+        print(qr_scan is mock_qr_scan)  # Trueになるということ
+        '''
+        mock_recorder = MagicMock()
+        mock_recorder.records = ["2_31", "2_32", "8_712", "1_996"]
+        mock_qr_scan.return_value = mock_recorder
+        
+        from src.qr_scanner import qr_scan # この qr_scan は偽物
+        r = qr_scan("http://dummy:4747/video")
+        qr_labels = r.records
+    '''ブロックを出ると元に戻る'''
+
+    # 書き換えと保存
+    rewrite_excel(path_excel, save_dir, qr_labels, to_Location, to_User)
+
+    rewrite_file = pd.read_excel("tests/output/rewrite_file.xlsx")
+
+    # 評価1: warnings.warn の捕捉と検証
+    with pytest.warns(UserWarning, match="以下のラベルはExcelにありません"):
+        rewrite_excel(path_excel, save_dir, qr_labels, to_Location, to_User)
+
+    # 評価2: 出力ファイルの比較
+    assert (rewrite_file["Location"] == expected_excel["Location"]).all()
+    assert (rewrite_file["User"] == expected_excel["User"]).all()
