@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (
-    QMainWindow, QPushButton, QTextEdit, QFileDialog, QMessageBox
+    QMainWindow, QPushButton, QTextEdit, QFileDialog, QMessageBox, QLabel, QLineEdit
 )
 from PyQt6.QtCore import Qt
 
@@ -12,19 +12,28 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("QR Excel Updater 💫")
-        self.setGeometry(200, 200, 600, 400)
+        self.setGeometry(200, 200, 600, 420)
 
-        # === ボタンとログビュー ===
+        # === DroidCam URL入力欄 ===
+        self.label_url = QLabel("DroidCamのURL:", self)
+        self.label_url.setGeometry(50, 30, 150, 30)
+
+        self.input_url = QLineEdit(self)
+        self.input_url.setGeometry(180, 30, 360, 30)
+        self.input_url.setPlaceholderText("192.168.0.111:4747")
+
+        # === ボタン ===
         self.btn_scan = QPushButton("QR読み取り📷", self)
-        self.btn_scan.setGeometry(50, 50, 200, 40)
+        self.btn_scan.setGeometry(50, 80, 200, 40)
         self.btn_scan.clicked.connect(self.scan_qr)
 
         self.btn_rewrite = QPushButton("Excel更新✏️", self)
-        self.btn_rewrite.setGeometry(50, 110, 200, 40)
+        self.btn_rewrite.setGeometry(50, 140, 200, 40)
         self.btn_rewrite.clicked.connect(self.update_excel)
 
+        # === ログ欄 ===
         self.text_log = QTextEdit(self)
-        self.text_log.setGeometry(50, 170, 500, 180)
+        self.text_log.setGeometry(50, 200, 500, 180)
         self.text_log.setReadOnly(True)
         self.text_log.setPlaceholderText("ここにログが出るよ✨")
 
@@ -32,14 +41,19 @@ class MainWindow(QMainWindow):
         self.qr_labels = []
 
     def log(self, message):
-        """ログ出力のショートカット"""
+        """ログ出力"""
         self.text_log.append(message)
 
     def scan_qr(self):
         """QRコード読み取り"""
+        ip_and_port = self.input_url.text().strip()
+        url = "http://" + ip_and_port + "/video"
+        if not url:
+            QMessageBox.warning(self, "注意⚠️", "DroidCamのURLを入力してね！")
+            return
+
         try:
-            droidcam_url = "http://192.168.0.180:4747/video"  # 必要なら後でUI入力可に
-            result = qr_scan(droidcam_url)
+            result = qr_scan(url)
             self.qr_labels = result.records
             self.log(f"✅ 読み取ったQR: {self.qr_labels}")
         except Exception as e:
