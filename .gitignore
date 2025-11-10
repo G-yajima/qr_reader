@@ -6,3 +6,14 @@ tests/output/
 TestExcel.xlsx
 assets/background.jpg
 assets/background.png
+# pyinstaller関係
+*.toc
+*.zip
+*.pkg
+*.exe
+*.html
+warn-main.txt
+main.spec
+*.pyz
+
+

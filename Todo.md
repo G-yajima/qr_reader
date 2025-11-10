@@ -9,6 +9,9 @@ pytest -v -m "integration" --droidcam_url="http://192.168.0.180:4747/video"
 ## すべて
 pytest -v --droidcam_url="http://192.168.0.180:4747/video"
 
+# exe化
+pyinstaller --noconsole --onefile --add-data "assets;assets" main.p
+
 
 # ToDoリスト
 - [o] 接続が不安定そうなので、落ちても記録が残るように改良
