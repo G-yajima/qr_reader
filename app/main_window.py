@@ -8,6 +8,10 @@ from src.rewrite_excel import rewrite_excel
 
 from PyQt6.QtGui import QPixmap
 
+class AlreadyScannedException(Exception):
+    def __str__(self):
+        return "QRをすでに読み取っています！追加で読み込みたいならエクセルを更新した後にアプリを再起動してね"
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -68,7 +72,7 @@ class MainWindow(QMainWindow):
 
         self.input_user = QLineEdit(self)
         self.input_user.setGeometry(180, 180, 200, 30)
-        self.input_user.setPlaceholderText("例: 松岡")
+        self.input_user.setPlaceholderText("例: 矢島")
 
         # === ボタン ===
         self.btn_scan = QPushButton("QR読み取り📷", self)
@@ -109,9 +113,13 @@ class MainWindow(QMainWindow):
         url = f"http://{ip_and_port}/video"
 
         try:
-            result = qr_scan(url)
-            self.qr_labels = result.records
-            self.log(f"✅ 読み取ったQRの数: {len(self.qr_labels)}")
+            if len(self.qr_labels) == 0:
+                result = qr_scan(url)
+                self.qr_labels = result.records
+                self.log(f"✅ 読み取ったQRの数: {len(self.qr_labels)}")
+            else:
+                # すでに読み取り済み
+                raise AlreadyScannedException()
         except Exception as e:
             QMessageBox.critical(self, "エラー💥", f"QR読み取り失敗: {e}")
 
@@ -143,9 +151,13 @@ class MainWindow(QMainWindow):
             return
 
         try:
-            rewrite_excel(file_path, self.required_cols, output_dir, self.qr_labels, to_Location, to_User)
+            warning_msg = rewrite_excel(file_path, self.required_cols, output_dir, self.qr_labels, to_Location, to_User)
+
+            if warning_msg:
+                QMessageBox.warning(self, "警告⚠️", warning_msg)
+            
             QMessageBox.information(self, "完了✨", "Excelの書き換えが完了しました！")
-            self.log(f"✏️ Excel更新完了: {file_path}\n→ 保存先: {output_dir}\n→ 調査地: {to_Location}, 使用者: {to_User}")
+            self.log(f"✏️ Excel更新完了: {file_path}\n→ ログファイルの保存先: {output_dir}\n→ 調査地: {to_Location}, 使用者: {to_User}")
         except UserWarning as w:
             QMessageBox.warning(self, "警告⚠️", str(w))
         except Exception as e:

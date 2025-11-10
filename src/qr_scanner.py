@@ -3,7 +3,7 @@ import time
 from src.qr_decoder import QrDecorder
 from src.qr_recorder import QrRecorder
 
-def qr_scan(droidcam_url, stop_key='space'):
+def qr_scan(droidcam_url):
     """
     スペースキーが押されるまでQRコードを繰り返し読み取る
     
@@ -18,7 +18,6 @@ def qr_scan(droidcam_url, stop_key='space'):
     print("=" * 60)
     print("連続QRコードスキャンモード")
     print("=" * 60)
-    print(f"[{stop_key.upper()}] キーを押すと終了します")
     print("=" * 60)
     
     while True:
