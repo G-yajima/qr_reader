@@ -51,9 +51,10 @@ def test_rewrite_file_test1_with_NoListed_label(tmp_path, required_cols):
     shutil.copy(src_path, path_excel)
 
     # 評価1: warnings.warn の捕捉と検証
-    with pytest.warns(UserWarning, match="以下のラベルはExcelにありません"):
-        rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
-    
+    warning_msg = rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
+    assert warning_msg is not None
+    assert "以下のラベルはExcelにありません" in warning_msg
+
     rewrite_file = pd.read_excel(path_excel)
     os.remove(path_excel)
 
@@ -87,9 +88,10 @@ def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidca
     shutil.copy(src_path, path_excel)
 
     # 評価1: warnings.warn の捕捉と検証
-    with pytest.warns(UserWarning, match="以下のラベルはExcelにありません"):
-        rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
-    
+    warning_msg = rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
+    assert warning_msg is not None
+    assert "以下のラベルはExcelにありません" in warning_msg
+
     rewrite_file = pd.read_excel(path_excel)
     os.remove(path_excel)
 
