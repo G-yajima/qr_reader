@@ -6,10 +6,24 @@ from PyQt6.QtCore import Qt
 from src.qr_scanner import qr_scan
 from src.rewrite_excel import rewrite_excel
 
+# 背景関連
 from PyQt6.QtGui import QPixmap
+import sys, os
 
+def resource_path(relative_path):
+    """PyInstallerでもPython実行でも画像を正しく読み込むための関数"""
+    if hasattr(sys, "_MEIPASS"):
+        # PyInstaller実行時
+        base_path = sys._MEIPASS
+    else:
+        # 普通にpython main.py 実行時
+        base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")  # ←assetsのある親フォルダに合わせる
+    return os.path.join(base_path, relative_path)
+
+# 現在日時取得
 import time
 
+# 独自の例外判定
 class AlreadyScannedException(Exception):
     def __str__(self):
         return "QRをすでに読み取っています！追加で読み込みたいならエクセルを更新した後にアプリを再起動してね"
@@ -24,12 +38,12 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("QR Excel Updater 💫")
         self.setGeometry(200, 200, 680, 540)
 
-        # === 背景画像ラベル ===
-        bg_label = QLabel(self)
-        bg_pixmap = QPixmap("assets/background.png")
-        bg_label.setPixmap(bg_pixmap)
-        bg_label.setScaledContents(True)  # ウィンドウサイズに合わせて拡大縮小
-        bg_label.setGeometry(470, 80, 250, 407)
+        # === 背景画像ラベル1 ===
+        bg_label1 = QLabel(self)
+        bg_pixmap1 = QPixmap(resource_path("assets/background1.png"))
+        bg_label1.setPixmap(bg_pixmap1)
+        bg_label1.setScaledContents(True)  # ウィンドウサイズに合わせて拡大縮小
+        bg_label1.setGeometry(370, 90, 320, 200)
 
         # === 半透明オーバーレイ ===
         overlay = QLabel(self)
@@ -37,7 +51,7 @@ class MainWindow(QMainWindow):
         overlay.setGeometry(0, 0, self.width(), self.height())
 
         # 背景を一番後ろに固定
-        bg_label.lower()
+        bg_label1.lower()
         overlay.lower()
 
         # === DroidCam URL入力欄 ===

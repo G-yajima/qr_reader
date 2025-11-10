@@ -6,6 +6,8 @@ tests/output/
 TestExcel.xlsx
 assets/background.jpg
 assets/background.png
+assets/background1.jpg
+assets/background1.png
 # pyinstaller関係
 *.toc
 *.zip
