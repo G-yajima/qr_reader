@@ -7,7 +7,7 @@ import time
 # フォーマットチェック
 from src.format_excel import format_excel
 
-def rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User):
+def rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User, to_Date):
     current_excel = pd.read_excel(path_excel)
     format_excel(current_excel, required_cols)
 
@@ -28,6 +28,9 @@ def rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Locatio
     mask = current_excel["Label"].isin(qr_labels)
     current_excel.loc[mask, "Location"] = to_Location
     current_excel.loc[mask, "User"] = to_User
+    # 列全体をdatetimeに変換してから代入する
+    current_excel.loc[mask, "UpdateDate"] = to_Date
+
     current_excel.to_excel(path_excel, index=False)
 
     # 🧾 検出ラベルログ

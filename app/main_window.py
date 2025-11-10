@@ -8,6 +8,8 @@ from src.rewrite_excel import rewrite_excel
 
 from PyQt6.QtGui import QPixmap
 
+import time
+
 class AlreadyScannedException(Exception):
     def __str__(self):
         return "QRをすでに読み取っています！追加で読み込みたいならエクセルを更新した後にアプリを再起動してね"
@@ -47,7 +49,7 @@ class MainWindow(QMainWindow):
         self.input_url.setPlaceholderText("192.168.0.111:4747")
 
         # === 出力フォルダ選択欄 ===
-        self.label_outdir = QLabel("保存フォルダ:", self)
+        self.label_outdir = QLabel("ログフォルダ:", self)
         self.label_outdir.setGeometry(50, 80, 150, 30)
 
         self.input_outdir = QLineEdit(self)
@@ -91,6 +93,8 @@ class MainWindow(QMainWindow):
 
         # === 内部状態 ===
         self.qr_labels = []
+        local_time = time.localtime()
+        self.to_Date = int(time.strftime("%Y%m%d", local_time))
 
     def log(self, message):
         """ログ出力"""
@@ -151,7 +155,7 @@ class MainWindow(QMainWindow):
             return
 
         try:
-            warning_msg = rewrite_excel(file_path, self.required_cols, output_dir, self.qr_labels, to_Location, to_User)
+            warning_msg = rewrite_excel(file_path, self.required_cols, output_dir, self.qr_labels, to_Location, to_User, self.to_Date)
 
             if warning_msg:
                 QMessageBox.warning(self, "警告⚠️", warning_msg)

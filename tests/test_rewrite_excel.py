@@ -18,12 +18,15 @@ def test_rewrite_file_test1_with_NoListed_label(tmp_path, required_cols):
     最初の二行 (2_31と2_32) 
     1. Locationを「研究室」から「房総」へ
     2. Userを「矢島」から「松岡」へ
-    3. エクセルには存在しない「1_996と8_712」が存在
+    3. UpdateDateを「1999/1/1」から「2025/11/3」へ
+    4. エクセルには存在しない「1_996と8_712」が存在
     """
     # 変更したい項目
     to_Location   = "房総"
     to_User       = "松岡"
+    to_Date       = 20251103
     path_excel    = tmp_path / "TestExcel.xlsx"
+    # path_excel    = "C:/Users/fores/Downloads/TestExcel.xlsx"
     save_log_dir  = "tests/output"
 
     # 期待するエクセルファイル
@@ -51,16 +54,17 @@ def test_rewrite_file_test1_with_NoListed_label(tmp_path, required_cols):
     shutil.copy(src_path, path_excel)
 
     # 評価1: warnings.warn の捕捉と検証
-    warning_msg = rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
+    warning_msg = rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User, to_Date)
     assert warning_msg is not None
     assert "以下のラベルはExcelにありません" in warning_msg
 
     rewrite_file = pd.read_excel(path_excel)
-    os.remove(path_excel)
+    # os.remove(path_excel)
 
     # 評価2: 出力ファイルの比較
     assert (rewrite_file["Location"] == expected_excel["Location"]).all()
     assert (rewrite_file["User"] == expected_excel["User"]).all()
+    assert (rewrite_file["UpdateDate"] == expected_excel["UpdateDate"]).all()
 
 @pytest.mark.integration
 def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidcam_url, required_cols):
@@ -72,6 +76,7 @@ def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidca
     # 変更したい項目
     to_Location   = "房総"
     to_User       = "松岡"
+    to_Date       = 20251103
     path_excel    = tmp_path / "TestExcel.xlsx"
     save_log_dir  = "tests/output"
 
@@ -88,7 +93,7 @@ def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidca
     shutil.copy(src_path, path_excel)
 
     # 評価1: warnings.warn の捕捉と検証
-    warning_msg = rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
+    warning_msg = rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User, to_Date)
     assert warning_msg is not None
     assert "以下のラベルはExcelにありません" in warning_msg
 
@@ -98,3 +103,4 @@ def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidca
     # 評価2: 出力ファイルの比較
     assert (rewrite_file["Location"] == expected_excel["Location"]).all()
     assert (rewrite_file["User"] == expected_excel["User"]).all()
+    assert (rewrite_file["UpdateDate"] == expected_excel["UpdateDate"]).all()

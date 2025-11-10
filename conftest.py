@@ -15,7 +15,7 @@ def droidcam_url(request):
 
 @pytest.fixture
 def required_cols():
-    return ["Label", "Location", "User"]
+    return ["Label", "Location", "User", "UpdateDate"]
 
 
 def pytest_runtest_logstart(nodeid, location):
