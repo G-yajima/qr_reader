@@ -4,9 +4,15 @@ import warnings
 import os
 import time
 
-def rewrite_excel(path_excel, save_log_dir, qr_labels, to_Location, to_User):
+# フォーマットチェック
+from src.format_excel import format_excel
+
+def rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User):
     # Excelの読み込み
     current_excel = pd.read_excel(path_excel)
+
+    # 列のチェック
+    format_excel(current_excel, required_cols)
 
     # 現在時刻の取得
     # 現在の時刻をフォーマットして表示

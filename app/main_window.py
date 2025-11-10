@@ -12,6 +12,9 @@ from PyQt6.QtGui import QPixmap
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        # エクセルの必要な列たち
+        self.required_cols = ["Label", "Location", "User"]
+
         self.setWindowTitle("QR Excel Updater 💫")
         self.setGeometry(200, 200, 680, 540)
 
@@ -140,7 +143,7 @@ class MainWindow(QMainWindow):
             return
 
         try:
-            rewrite_excel(file_path, output_dir, self.qr_labels, to_Location, to_User)
+            rewrite_excel(file_path, self.required_cols, output_dir, self.qr_labels, to_Location, to_User)
             QMessageBox.information(self, "完了✨", "Excelの書き換えが完了しました！")
             self.log(f"✏️ Excel更新完了: {file_path}\n→ 保存先: {output_dir}\n→ 調査地: {to_Location}, 使用者: {to_User}")
         except UserWarning as w:

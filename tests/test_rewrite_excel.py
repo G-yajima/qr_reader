@@ -13,7 +13,7 @@ from unittest.mock import patch, MagicMock
 # QR関連
 from src.qr_scanner import qr_scan
 
-def test_rewrite_file_test1_with_NoListed_label(tmp_path):
+def test_rewrite_file_test1_with_NoListed_label(tmp_path, required_cols):
     """
     最初の二行 (2_31と2_32) 
     1. Locationを「研究室」から「房総」へ
@@ -52,7 +52,7 @@ def test_rewrite_file_test1_with_NoListed_label(tmp_path):
 
     # 評価1: warnings.warn の捕捉と検証
     with pytest.warns(UserWarning, match="以下のラベルはExcelにありません"):
-        rewrite_excel(path_excel, save_log_dir, qr_labels, to_Location, to_User)
+        rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
     
     rewrite_file = pd.read_excel(path_excel)
     os.remove(path_excel)
@@ -62,7 +62,7 @@ def test_rewrite_file_test1_with_NoListed_label(tmp_path):
     assert (rewrite_file["User"] == expected_excel["User"]).all()
 
 @pytest.mark.integration
-def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidcam_url):
+def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidcam_url, required_cols):
     """
     droidcamバージョン
     含まれてる  : 2_25, 2_26
@@ -88,7 +88,7 @@ def test_rewrite_file_test1_with_NoListed_label_with_doroidcam(tmp_path, droidca
 
     # 評価1: warnings.warn の捕捉と検証
     with pytest.warns(UserWarning, match="以下のラベルはExcelにありません"):
-        rewrite_excel(path_excel, save_log_dir, qr_labels, to_Location, to_User)
+        rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Location, to_User)
     
     rewrite_file = pd.read_excel(path_excel)
     os.remove(path_excel)

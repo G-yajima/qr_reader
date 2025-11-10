@@ -13,6 +13,9 @@ import pytest
 def droidcam_url(request):
     return request.config.getoption("--droidcam_url")
 
+@pytest.fixture
+def required_cols():
+    return ["Label", "Location", "User"]
 
 
 def pytest_runtest_logstart(nodeid, location):
