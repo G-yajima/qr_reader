@@ -1,3 +1,16 @@
+# テストコマンド
+## QRを実際に読み込まないテストのみ
+読み込みはモックしてる。
+pytest -v -m "not integration"
+
+## 統合テストのみ
+pytest -v -m "integration" --droidcam_url="http://192.168.0.180:4747/video"
+
+## すべて
+pytest -v --droidcam_url="http://192.168.0.180:4747/video"
+
+
+# ToDoリスト
 - [o] 接続が不安定そうなので、落ちても記録が残るように改良
     - [o] recoder classを定義
         - [o] これまで記録してきたconfirmed_qr_codes（set class）を格納
@@ -23,3 +36,4 @@
 - GUI
     - [0] リストにないSDの出力表示
     - [o] 更新日時追加
+
