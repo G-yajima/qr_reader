@@ -10,7 +10,7 @@ pytest -v -m "integration" --droidcam_url="http://192.168.0.180:4747/video"
 pytest -v --droidcam_url="http://192.168.0.180:4747/video"
 
 # exe化
-pyinstaller --noconsole --onefile --add-data "assets;assets" main.p
+pyinstaller --noconsole --onefile --icon=icon.ico --add-data "assets;assets" main.py
 
 
 # ToDoリスト

@@ -17,5 +17,6 @@ assets/background1.png
 warn-main.txt
 main.spec
 *.pyz
-
+*.ico
+icon.png
 
