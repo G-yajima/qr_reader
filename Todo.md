@@ -10,7 +10,7 @@ pytest -v -m "integration" --droidcam_url="http://192.168.0.180:4747/video"
 pytest -v --droidcam_url="http://192.168.0.180:4747/video"
 
 # exe化
-pyinstaller --noconsole --onefile --icon=icon.ico --add-data "assets;assets" main.py
+pyinstaller --noconsole --onefile --icon=icon.ico --add-data "assets;assets" main.py --add-binary "C:/Users/fores/Downloads/QR_Barcode/QR_Barcode/lib/pyzbar/libiconv.dll" --add-binary "C:/Users/fores/Downloads/QR_Barcode/QR_Barcode/lib/pyzbar/libzbar-64.dll"
 
 
 # ToDoリスト
@@ -40,3 +40,5 @@ pyinstaller --noconsole --onefile --icon=icon.ico --add-data "assets;assets" mai
     - [0] リストにないSDの出力表示
     - [o] 更新日時追加
 
+- 異常な番号（F&99みたいな）があった場合の対応
+    - 読み取った電池番号のリストを受け取ってもとに戻せるようにすべき？

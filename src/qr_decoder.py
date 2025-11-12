@@ -17,7 +17,7 @@ class QrDecorder():
         self.state = "run"
         self.current_codes = set()
 
-    def decode_droidcam(self, confirmation_threshold=10):
+    def decode_droidcam(self, confirmation_threshold=30):
         """
         DroidCamから複数のQR/バーコードをリアルタイムプレビューしながら読み取る
         """
@@ -60,11 +60,11 @@ class QrDecorder():
                 if decoded_objects:
                     for obj in decoded_objects:
                         data = obj.data.decode("utf-8")
-                        current_frame_qr_codes.append(data)
                         detection_count[data] += 1
 
                         if detection_count[data] >= confirmation_threshold:
                             confirmed_qr_codes.add(data)
+                            current_frame_qr_codes.append(data)
 
                         # バウンディングボックスを描画
                         (x, y, w, h) = obj.rect
