@@ -17,7 +17,7 @@ class QrDecorder():
         self.state = "run"
         self.current_codes = set()
 
-    def decode_droidcam(self, confirmation_threshold=5):
+    def decode_droidcam(self, confirmation_threshold=10):
         """
         DroidCamから複数のQR/バーコードをリアルタイムプレビューしながら読み取る
         """
