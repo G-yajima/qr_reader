@@ -11,6 +11,10 @@ def rewrite_excel(path_excel, required_cols, save_log_dir, qr_labels, to_Locatio
     current_excel = pd.read_excel(path_excel)
     format_excel(current_excel, required_cols)
 
+    # 文字列に変換しておく
+    current_excel["Label"] = current_excel["Label"].astype(str)
+
+    # 時刻の準備
     local_time = time.localtime()
     formatted_time = time.strftime("%Y-%m-%d-%H-%M-%S", local_time)
 
